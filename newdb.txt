@@ -1,0 +1,113 @@
+CREATE TABLE categories(
+categoryId SERIAL,
+categoryName VARCHAR(25) NOT NULL,
+categoryDescription VARCHAR(100) DEFAULT 'No Description Available',
+categoryImage VARCHAR(30) DEFAULT 'assets/defaultCategory.jpg',
+
+PRIMARY KEY (categoryId)
+);
+
+
+
+CREATE TABLE subcategories(
+subCategoryId SERIAL,
+subCategoryName VARCHAR(25) NOT NULL,
+subCategoryDescription VARCHAR(100) DEFAULT 'No Description Available',
+subCategoryImage VARCHAR(30) DEFAULT 'assets/defaultCategory.jpg',
+
+
+
+categoryId int NOT NULL,
+
+PRIMARY KEY(subCategoryId),
+FOREIGN KEY(categoryId) REFERENCES categories(categoryId)
+);
+
+
+
+CREATE TABLE product(
+productId SERIAL,
+productName VARCHAR(25) NOT NULL,
+productDescription VARCHAR(100) DEFAULT 'No Description Available.',
+productImage VARCHAR(30) DEFAULT 'assets/defaultProduct.jpg',
+categoryId int NOT NULL,
+
+price float NOT NULL,
+discountPercent int DEFAULT 0,
+discountPrice float DEFAULT NULL,
+
+PRIMARY KEY (productId),
+FOREIGN KEY (categoryId ) REFERENCES categories(categoryId )
+);
+
+
+
+CREATE TABLE users(
+userId SERIAL,
+username VARCHAR(15) NOT NULL,
+passwd VARCHAR (18) NOT NULL, --idealy hashed and salted
+
+firstName VARCHAR (15),
+lastName VARCHAR(15),
+address VARCHAR(200),
+contractNo VARCHAR(15),
+
+administrator boolean DEFAULT FALSE,
+
+PRIMARY KEY (userId)
+);
+
+
+
+CREATE TABLE review(
+reviewId SERIAL,
+productId int NOT NULL,
+userId int NOT NULL,
+rating int NOT NULL,
+reviewText VARCHAR(200),
+
+PRIMARY KEY (reviewId),
+FOREIGN KEY (productId) REFERENCES product(productId),
+FOREIGN KEY (userId) REFERENCES users(userId)
+);
+
+
+
+CREATE TABLE orders(
+orderId SERIAL,
+orderTrackingNo VARCHAR(10),
+orderItemQuantity int,
+totalPrice float DEFAULT 0.00,
+userId int,
+
+PRIMARY KEY (orderId),
+FOREIGN KEY (userId) REFERENCES users(userId)
+);
+
+
+
+CREATE TABLE address(
+addressId SERIAL,
+orderId int NOT NULL,
+
+addressLine1 VARCHAR(50),
+addressLine2 VARCHAR(50),
+city VARCHAR(10),
+county VARCHAR(15),
+postCode VARCHAR(8),
+
+PRIMARY KEY (addressId),
+FOREIGN KEY (orderId) REFERENCES orders(orderId)
+);
+
+
+CREATE TABLE orderItem( -- many to one with order
+orderItemId SERIAL,
+orderId int NOT NULL,
+productId int NOT NULL,
+quantity int DEFAULT 1,
+
+PRIMARY KEY(orderItemId),
+FOREIGN KEY(productId) REFERENCES product(productId),
+FOREIGN KEY(orderId) REFERENCES orders(orderId)
+);
