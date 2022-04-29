@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.antique.store.entities.Product;
-
+import com.ecommerce.antique.store.entities.Category;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>{
 
@@ -57,4 +61,15 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 	//	
 //		List<Product> findAllOrderByNameASC();
 	//	
+		@Transactional
+		@Modifying
+		@Query("DELETE FROM Product WHERE productid = ?1")
+		int remove(@Param("id") Long id);
+		/*
+		@Query(value = "SELECT * FROM product WHERE categoryid = ?1", nativeQuery = true)
+		List<Product> getProductsFromCategoryId(@Param("categoryid") Long categoryId);
+		*/
+		
+		  List<Product> findByCategory(Category category);
+		
 }

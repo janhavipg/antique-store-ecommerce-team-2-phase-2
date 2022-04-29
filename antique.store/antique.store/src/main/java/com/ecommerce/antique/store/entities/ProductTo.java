@@ -23,7 +23,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Product {
+public class ProductTo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productid;
@@ -35,8 +35,6 @@ public class Product {
 	private int discountpercent;
 	private BigDecimal discountprice;
 	
-	@ManyToOne
-	@JoinColumn(name = "categoryid", referencedColumnName = "categoryid")
-	@JsonIgnore
-	private Category category;
+	private Long categoryid; // yeah so this is the most annoying thing in the observable universe, 
+	                         // so I've made a duplicate class where I can just accept the darn ID as a long okay?
 }

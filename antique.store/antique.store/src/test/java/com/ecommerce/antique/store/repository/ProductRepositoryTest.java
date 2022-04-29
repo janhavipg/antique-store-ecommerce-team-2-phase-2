@@ -120,8 +120,8 @@ public class ProductRepositoryTest {
  @Test
  void deleteAllMethod() {
  	// productRepository.delete();
- 	Product product = productRepository.findById(5L).get();
- 	Product product1 = productRepository.findById(6L).get();
+ 	Product product = productRepository.findById(1L).get();
+ 	Product product1 = productRepository.findById(1L).get();
  	
  	productRepository.deleteAll(List.of(product, product1));
  }
