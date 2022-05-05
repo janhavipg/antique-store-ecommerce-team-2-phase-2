@@ -23,7 +23,7 @@ public class ProductRepositoryTest {
 	public void test() {
 		assertTrue(true);
 	}
-	
+	/*
 //	@Test
 //	public void saveProductObject() {
 //		// create product
@@ -138,6 +138,16 @@ public class ProductRepositoryTest {
  void countMethod() {
  	long count = productRepository.count();
  	System.out.println(count);
+ }*/
+	
+	
+	
+ @Test
+ void deleteMethod() {
+	 Long id = 1L;
+	 int result = productRepository.remove(id);
+	 
+	 assertTrue(result == 1);
  }
 }
 

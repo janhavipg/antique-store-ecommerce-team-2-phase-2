@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +25,9 @@ import com.ecommerce.antique.store.entities.CategoryDiscount;
 
 import com.ecommerce.antique.store.services.ProductServices;
 
-import org.json.simple.JSONObject;
-
 @RestController
 @RequestMapping("/api/v2")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 public class ProductController {
 
 	private ProductServices productService;
@@ -39,11 +39,11 @@ public class ProductController {
 		// this URL will read data from query parameters
 		// query param are appended at the end of URL after
 		// http://localhost:8080/page/products?pgnum=0&size=2
-//		@GetMapping(value = "/page/products",produces = "application/json")
-//		public List<Product> getProductsOnPage(@RequestParam("pgnum") int pageNumber, @RequestParam("size") int pageSize) {
-//			List<Product> product = this.productService.getProductBasedOnPage(pageNumber, pageSize);
-//			return product;
-//		}
+		//@GetMapping(value = "/page/products",produces = "application/json")
+		//public List<Product> getProductsOnPage(@RequestParam("pgnum") int pageNumber, @RequestParam("size") int pageSize) {
+		//List<Product> product = this.productService.getProductBasedOnPage(pageNumber, pageSize);	
+		//return product;
+		//}
 		
 		@GetMapping("/products")
 		public ResponseEntity<List<Product>> findAllProducts(){

@@ -21,8 +21,6 @@ import com.ecommerce.antique.store.entities.CategoryDiscount;
 import java.util.Optional;
 import java.util.NoSuchElementException;
 
-import org.json.simple.JSONObject;
-
 import java.util.List;
 
 @Service
@@ -54,6 +52,10 @@ public class ProductServices {
 		return productList;
 	}
 	
+	public Product findLastProduct() {
+		Product lastProduct = productRepository.findLastProduct();
+		return lastProduct;
+	}
 	
 	public boolean delete(Long id) {
 		var removed = productRepository.remove(id);
@@ -88,7 +90,7 @@ public class ProductServices {
 			newProductCategory = cateLookup.get();
 		}
 		catch (NoSuchElementException e) {
-			System.out.println("WE didn't find nuttin' category");
+			System.out.println("Couldn't find categoryId (in addProduct)");
 			return false;
 		}
 		newProduct.setCategory(newProductCategory);
@@ -107,24 +109,29 @@ public class ProductServices {
 		BigDecimal price = productTo.getPrice();
 		int discountPercent = productTo.getDiscountpercent();
 
-		
+		Product dbProduct = productRepository.searchByName(productName);
+		productId = dbProduct.getProductid();
 		Optional<Product> optOriginalProduct = productRepository.findById(productId);
 		Product originalProduct;
-		
-		//Product originalProduct = productRepository.findById(productId);
 		
 		try {
 			originalProduct = optOriginalProduct.get();
 		}
 		catch (NoSuchElementException e) {
-			System.out.println("WE didn't find nuttin' product");
+			System.out.println("Couldn't find productId (in updateProduct)");
 			return false;
 		}
+
+		
+		//Product originalProduct = productRepository.findById(productId);
 		
 		Category originalProductCategory = originalProduct.getCategory();
 		Long orignalCatagoryId = originalProductCategory.getCategoryid();
 		Long categoryId = productTo.getCategoryid();
 		
+		System.out.println('"'+productDescription+'"');
+
+		System.out.println(productName + " " + productDescription + " " + productImage + " " + price + " " + discountPercent);
 		if(categoryId == null || categoryId == 0) {
 			categoryId = orignalCatagoryId;
 		}
@@ -132,13 +139,11 @@ public class ProductServices {
 		Optional<Category> cateLookup = categoryRepository.findById(categoryId);
 		Category newProductCategory;
 		
-		//Product originalProduct = productRepository.findById(productId);
-		
 		try {
 			newProductCategory = cateLookup.get();
 		}
 		catch (NoSuchElementException e) {
-			System.out.println("WE didn't find nuttin' category");
+			System.out.println("Couldn't find categoryId (in updateProduct)");
 			return false;
 		}
 
@@ -146,26 +151,25 @@ public class ProductServices {
 			productName = originalProduct.getProductname();
 		}
 		
-		if(productDescription == null){
-			productDescription = originalProduct.getProductdescription();
-		}
-		
-		if(productImage == null){
-			productImage = originalProduct.getProductimage();
-		}
-		
-	
-		if(categoryId == 0) {
-			categoryId =  orignalCatagoryId;
-		}
 
-		if(price == BigDecimal.valueOf(0.0) ){
+		if(price == BigDecimal.valueOf(0.0)){
 
 			price = originalProduct.getPrice();
 		}
 		
 		if(discountPercent == -1) {
 			discountPercent = originalProduct.getDiscountpercent();
+		}
+		
+		if(productDescription == "-"){
+			System.out.println("qwhujioe");
+
+			productDescription = originalProduct.getProductdescription();
+		}
+		
+		if(productImage == "-"){
+			System.out.println("qwhjkle");
+			productImage = originalProduct.getProductimage();
 		}
 		
 		if(price == null) {
@@ -193,8 +197,16 @@ public class ProductServices {
 	}
 	
 	public boolean setCategoryDiscount(CategoryDiscount categoryDiscount) {
-		Long categoryId =  categoryDiscount.getCategoryid();
+		Long categoryId;
+		String categoryName = categoryDiscount.getCategoryname();
 		int percentDiscount = categoryDiscount.getDiscountpercent();
+		
+		Category cateLookupByName = categoryRepository.searchByName(categoryName);
+		
+		categoryId = cateLookupByName.getCategoryid();
+		
+		System.out.println("categoryId:" + categoryId);
+
 		
 		Optional<Category> cateLookup = categoryRepository.findById(categoryId);
 		Category category;
@@ -203,7 +215,7 @@ public class ProductServices {
 			category = cateLookup.get();
 		}
 		catch (NoSuchElementException e) {
-			System.out.println("WE didn't find nuttin' category pop");
+			System.out.println("Couldn't find categoryId (in setCategoryDiscount)");
 			return false;
 		}
 		

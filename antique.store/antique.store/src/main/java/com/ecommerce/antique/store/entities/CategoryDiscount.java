@@ -24,7 +24,7 @@ import lombok.ToString;
 public class CategoryDiscount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long categoryid;
+	private String categoryname;
 
 	private int discountpercent;
 }

@@ -70,6 +70,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 		List<Product> getProductsFromCategoryId(@Param("categoryid") Long categoryId);
 		*/
 		
-		  List<Product> findByCategory(Category category);
+		@Transactional
+		@Modifying
+		@Query("SELECT p FROM Product p WHERE p.productid = (SELECT MAX(p.productid) FROM Product)")
+		Product findLastProduct();
 		
+     	@Query(nativeQuery = true)
+		List<Product> findByCategory(Category category);
+
+    	
+    	@Query("SELECT p FROM Product p WHERE p.productname = ?1")
+    	Product searchByName(@Param("name") String name);
+    
 }
